@@ -1,0 +1,12 @@
+config:
+  repo: https://github.com/WorldHealthOrganization/nginx-ingress-whitelister.git 
+  tag: main
+bundle:
+  name: gateway-ca-bundle-test
+  namespace: default
+  repo: https://github.com/WorldHealthOrganization/tng-participants-dev.git 
+clienttrafficpolicy:
+  name: xfcc-policy
+  namespace: default
+job: 
+  schedule: '*/1 * * * *'

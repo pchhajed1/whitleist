@@ -1,0 +1,46 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: {{ .Release.Name }}-bot
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: {{ .Values.job.schedule | quote }}
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    spec:
+      template: 
+        spec:
+          serviceAccountName: {{ .Release.Name }}-service-account
+          volumes:
+            - name: {{ .Release.Name }}-bot-config
+              configMap:
+                name: {{ .Release.Name }}-bot-config
+                defaultMode: 420
+          containers:
+            - name: {{ .Release.Name }}-bot
+              image: alpine:3.18
+              env: 
+                - name: TAG
+                  value: {{ .Values.config.tag }}
+                - name: REPO
+                  value: {{ .Values.config.repo }}
+                - name: CERTIFICATEFOLDER
+                  value: {{ .Values.bundle.repo }}
+                - name: BUNDLE_NAMESPACE
+                  value: {{ .Values.bundle.namespace }}
+                - name: BUNDLE_NAME
+                  value: {{ .Values.bundle.name }}
+                - name: POLICY_NAME
+                  value: {{ .Values.clienttrafficpolicy.name }}
+                - name: POLICY_NAMESPACE
+                  value: {{ .Values.clienttrafficpolicy.namespace }}
+              args:
+                - /bin/sh
+                - /tmp/script.sh
+              resources: {}
+              volumeMounts:
+                - name: {{ .Release.Name }}-bot-config
+                  mountPath: /tmp
+              imagePullPolicy: Always
+          restartPolicy: Never

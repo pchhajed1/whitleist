@@ -1,0 +1,26 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: {{ .Release.Name }}-bot-delete-hook
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-delete
+spec:
+  template: 
+    spec:
+      serviceAccountName: {{ .Release.Name }}-service-account
+      containers:
+        - name: {{ .Release.Name }}-bot-delete-hook
+          image: alpine
+          env: 
+            - name: TAG
+              value: {{ .Values.config.tag }}
+            - name: REPO
+              value: {{ .Values.config.repo }}
+            - name: BUNDLE_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: BUNDLE_NAME
+              value: {{ .Values.bundle.name }}
+          command: ["sh", "-c", "apk add --update py-pip	> /dev/null;apk add --update py-pip	> /dev/null;apk add --update git > /dev/null; apk add --update bash > /dev/null;git clone $REPO --branch $TAG bot;  pip install -r /bot/requirements.txt > /dev/null; #python /bot/removeCaBundle.py"]
+          imagePullPolicy: Always
+      restartPolicy: Never
