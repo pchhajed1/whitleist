@@ -11,6 +11,7 @@ rules:
         "roles.rbac.authorization.k8s.io",
         "authorization.k8s.io",
         "gateway.envoyproxy.io/v1alpha1",
+        "gateway.envoyproxy.io",
         "extensions",
       ]
     resources: ["clienttrafficpolicies"]
