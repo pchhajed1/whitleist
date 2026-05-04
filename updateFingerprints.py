@@ -35,7 +35,8 @@ logger = logging.getLogger(__name__)
 # Kubernetes client setup
 # -------------------------------------------------------------------
 try:
-    config.load_kube_config()
+    #config.load_kube_config()
+    config.load_incluster_config()
 except Exception as e:
     logger.error("Failed to load kubeconfig: %s", e)
     sys.exit(1)
