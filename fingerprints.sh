@@ -1,5 +1,4 @@
 #!/bin/sh
-set -euo pipefail
 
 # --- Validate input ---
 if [[ $# -lt 1 ]]; then
